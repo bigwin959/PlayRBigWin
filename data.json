@@ -1,9 +1,9 @@
 {
   "siteSettings": {
     "title": "Random Game Picker BigWin959",
+    "heroTitle": "Play Random Game",
     "ctaButtonText": "Play Highest RTP Games for Today!",
     "playUrl": "https://www.bigwin959.com",
-    "heroTitle": "Play Random Game",
     "logoUrl": "assets/logo.png"
   },
   "games": [
@@ -14,7 +14,7 @@
     },
     {
       "name": "Golden Empire",
-      "image": "assets/golden_empire.png",
+      "image": "https://res.cloudinary.com/dmyocpyxd/image/upload/v1769924615/ChatGPT%20Image%20Feb%201%2C%202026%2C%2001_43_01%20PM.png",
       "provider": "JILI"
     },
     {
@@ -145,7 +145,7 @@
     },
     {
       "name": "Sugar Rush",
-      "image": "assets/sugar_rush.png",
+      "image": "https://res.cloudinary.com/dmyocpyxd/image/upload/v1769924615/ChatGPT%20Image%20Feb%201%2C%202026%2C%2001_43_01%20PM.png",
       "provider": "PP Slot",
       "rtp": "96.50%"
     },

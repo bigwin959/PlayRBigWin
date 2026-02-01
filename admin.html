@@ -162,10 +162,46 @@
             transform: translateY(0);
             opacity: 1;
         }
+
+        /* Login Modal */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            z-index: 1000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .login-box {
+            background: #1a1a2e;
+            padding: 40px;
+            border-radius: 15px;
+            border: 1px solid var(--neon-blue);
+            text-align: center;
+        }
+
+        .hidden {
+            display: none !important;
+        }
     </style>
 </head>
 
 <body>
+
+    <!-- Login Modal -->
+    <div class="modal-overlay" id="loginModal">
+        <div class="login-box">
+            <h2 style="margin-bottom:20px;">Admin Login</h2>
+            <input type="password" id="passwordInput" placeholder="Enter Password" style="margin-bottom:20px;">
+            <button class="btn-save" onclick="handleLogin()">Login</button>
+            <p id="loginError" style="color:red; margin-top:10px; display:none;">Invalid Password</p>
+        </div>
+    </div>
 
     <div class="toast" id="toast">Saved Successfully!</div>
 
@@ -185,6 +221,14 @@
             <div class="form-group">
                 <label>Page Title</label>
                 <input type="text" id="siteTitle">
+            </div>
+            <div class="form-group">
+                <label>Hero Title (H1)</label>
+                <input type="text" id="heroTitle" placeholder="e.g. Play Random Game">
+            </div>
+            <div class="form-group">
+                <label>Logo URL</label>
+                <input type="text" id="logoUrl" placeholder="assets/logo.png">
             </div>
             <div class="form-group">
                 <label>CTA Button Text</label>
@@ -215,33 +259,63 @@
 
     <script>
         let currentData = { games: [], siteSettings: {} };
-
-        const API_URL = '/api/data';
+        const API_URL = '/api/data'; // Auto-adapts to local or netlify
 
         // Elements
         const siteTitleInput = document.getElementById('siteTitle');
+        const heroTitleInput = document.getElementById('heroTitle');
         const ctaTextInput = document.getElementById('ctaText');
         const playUrlInput = document.getElementById('playUrl');
+        const logoUrlInput = document.getElementById('logoUrl');
         const gamesListContainer = document.getElementById('gamesList');
         const globalSaveBtn = document.getElementById('globalSaveBtn');
         const addGameBtn = document.getElementById('addGameBtn');
         const toast = document.getElementById('toast');
 
-        // Fetch Data on Load
-        fetch(API_URL)
-            .then(res => res.json())
-            .then(data => {
-                currentData = data;
-                renderSettings();
-                renderGames();
-            })
-            .catch(err => alert('Error loading data: ' + err));
+        // PassAuth
+        let adminPassword = sessionStorage.getItem('admin_password');
+
+        function checkAuth() {
+            if (!adminPassword) {
+                document.getElementById('loginModal').classList.remove('hidden');
+            } else {
+                document.getElementById('loginModal').classList.add('hidden');
+                loadData();
+            }
+        }
+
+        window.handleLogin = () => {
+            const pass = document.getElementById('passwordInput').value;
+            if (pass) {
+                adminPassword = pass;
+                sessionStorage.setItem('admin_password', pass);
+                checkAuth();
+            }
+        };
+
+        window.logout = () => {
+            sessionStorage.removeItem('admin_password');
+            location.reload();
+        }
+
+        function loadData() {
+            fetch(API_URL)
+                .then(res => res.json())
+                .then(data => {
+                    currentData = data;
+                    renderSettings();
+                    renderGames();
+                })
+                .catch(err => alert('Error loading data: ' + err));
+        }
 
         function renderSettings() {
             if (currentData.siteSettings) {
                 siteTitleInput.value = currentData.siteSettings.title || '';
+                heroTitleInput.value = currentData.siteSettings.heroTitle || '';
                 ctaTextInput.value = currentData.siteSettings.ctaButtonText || '';
                 playUrlInput.value = currentData.siteSettings.playUrl || '';
+                logoUrlInput.value = currentData.siteSettings.logoUrl || '';
             }
         }
 
@@ -283,7 +357,6 @@
             });
         }
 
-        // Action Functions
         window.updateGame = (index, field, value) => {
             currentData.games[index][field] = value;
         };
@@ -309,27 +382,38 @@
             // Update Settings Object
             currentData.siteSettings = {
                 title: siteTitleInput.value,
+                heroTitle: heroTitleInput.value,
                 ctaButtonText: ctaTextInput.value,
                 playUrl: playUrlInput.value,
-                // Preserve others if they exist
-                ...currentData.siteSettings,
-                title: siteTitleInput.value,
-                ctaButtonText: ctaTextInput.value,
-                playUrl: playUrlInput.value
+                logoUrl: logoUrlInput.value
             };
 
-            // Post Data
+            // Post Data WITH PASSWORD HEADER
             fetch(API_URL, {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
+                headers: {
+                    'Content-Type': 'application/json',
+                    'x-admin-password': adminPassword
+                },
                 body: JSON.stringify(currentData)
             })
-                .then(res => res.json())
+                .then(async res => {
+                    if (res.status === 401) {
+                        alert("Unauthorized: Incorrect Password");
+                        logout();
+                        return;
+                    }
+                    if (!res.ok) throw new Error("Save failed");
+                    return res.json();
+                })
                 .then(data => {
-                    showToast();
+                    if (data) showToast();
                 })
                 .catch(err => alert('Failed to save: ' + err));
         });
+
+        // Init
+        checkAuth(); // Call checkAuth instead of fetching immediately
 
         function showToast() {
             toast.classList.add('show');

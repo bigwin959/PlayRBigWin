@@ -37,6 +37,17 @@ document.addEventListener('DOMContentLoaded', () => {
         // Apply Site Settings
         if (siteSettings) {
             if (siteSettings.title) document.title = siteSettings.title;
+
+            // New Fields
+            if (siteSettings.heroTitle) {
+                const h1 = document.getElementById('heroTitle');
+                if (h1) h1.textContent = siteSettings.heroTitle;
+            }
+            if (siteSettings.logoUrl) {
+                const logo = document.querySelector('.logo-img');
+                if (logo) logo.src = siteSettings.logoUrl;
+            }
+
             if (siteSettings.ctaButtonText) btn.textContent = siteSettings.ctaButtonText;
             if (siteSettings.playUrl) {
                 document.querySelectorAll('.play-btn, .game-card a, .btn-random').forEach(el => {

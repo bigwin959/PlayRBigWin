@@ -24,6 +24,19 @@ exports.handler = async (event, context) => {
             };
         }
 
+        // 3. Security Check
+        const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD;
+        if (event.httpMethod === 'POST') {
+            const providedPass = event.headers['x-admin-password'] || event.headers['X-Admin-Password'];
+            if (ADMIN_PASSWORD && providedPass !== ADMIN_PASSWORD) {
+                return {
+                    statusCode: 401,
+                    headers,
+                    body: JSON.stringify({ error: 'Unauthorized: Invalid Password' })
+                };
+            }
+        }
+
         if (!GITHUB_TOKEN || !REPO_OWNER || !REPO_NAME) {
             return {
                 statusCode: 500,

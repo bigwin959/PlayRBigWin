@@ -10,7 +10,20 @@ const DATA_FILE = path.join(__dirname, 'data.json');
 
 app.use(cors());
 app.use(bodyParser.json());
-app.use(express.static(__dirname)); // Serve static files (index.html, admin.html, etc.)
+app.use(express.static(__dirname)); // Serve static files
+
+// Local Development Security Middleware
+const LOCAL_ADMIN_PASSWORD = "admin"; // Default local password
+app.use((req, res, next) => {
+    if (req.method === 'POST' && req.path === '/api/data') {
+        const providedPass = req.headers['x-admin-password'];
+        if (providedPass !== LOCAL_ADMIN_PASSWORD) {
+            console.log("Blocked unauthorized write attempt");
+            return res.status(401).json({ error: 'Unauthorized' });
+        }
+    }
+    next();
+});
 
 // Get Data
 app.get('/api/data', (req, res) => {

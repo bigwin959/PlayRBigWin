@@ -300,13 +300,25 @@
 
         function loadData() {
             fetch(API_URL)
-                .then(res => res.json())
+                .then(res => {
+                    if (res.status === 500) {
+                        throw new Error("Server Error (500). Please Check Netlify Environment Variables (GITHUB_TOKEN, etc).");
+                    }
+                    if (!res.ok) throw new Error(`HTTP Error ${res.status}`);
+                    return res.json();
+                })
                 .then(data => {
+                    // Check for reliable error object from function
+                    if (data.error) throw new Error(data.error);
+
                     currentData = data;
                     renderSettings();
                     renderGames();
                 })
-                .catch(err => alert('Error loading data: ' + err));
+                .catch(err => {
+                    console.error(err);
+                    alert('Failed to load data:\n' + err.message);
+                });
         }
 
         function renderSettings() {

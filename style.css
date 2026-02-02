@@ -134,7 +134,7 @@ body {
     justify-content: center;
     perspective: 800px;
     /* Adjusted perspective for smaller scale */
-    overflow: hidden;
+    /* overflow: hidden; Removed to fix shadow clipping */
 }
 
 /* Hide scrollbar since we are using custom stacking */
@@ -208,9 +208,7 @@ body {
 }
 
 /* Animation for initial pop-in handled by script usually, but we keep basic transition */
-.game-card.show {
-    /* controlled by position classes now */
-}
+/* .game-card.show removed as it is controlled by position classes now */
 
 /* Stagger not needed for position swaps, built into transition */
 #card-jili.show,
@@ -429,4 +427,49 @@ body {
     font-size: 1.2rem;
     margin-right: 8px;
     filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2));
+}
+
+/* Floating Background Icons */
+#floating-icons-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+    overflow: hidden;
+    pointer-events: none;
+}
+
+.floating-icon {
+    position: absolute;
+    width: 60px;
+    height: 60px;
+    border-radius: 12px;
+    opacity: 0.15;
+    filter: grayscale(0.5);
+    background-size: cover;
+    background-position: center;
+    box-shadow: 0 0 10px rgba(255, 255, 255, 0.1);
+    animation: floatUp linear infinite;
+}
+
+@keyframes floatUp {
+    0% {
+        transform: translateY(110vh) rotate(0deg) scale(0.8);
+        opacity: 0;
+    }
+
+    10% {
+        opacity: 0.15;
+    }
+
+    90% {
+        opacity: 0.15;
+    }
+
+    100% {
+        transform: translateY(-10vh) rotate(360deg) scale(1.2);
+        opacity: 0;
+    }
 }

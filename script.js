@@ -67,6 +67,9 @@ document.addEventListener('DOMContentLoaded', () => {
         populateInitialCards(carouselJili, jiliGames);
         populateInitialCards(carouselPg, pgGames);
         populateInitialCards(carouselPp, ppGames);
+
+        // Initialize Floating Background Icons
+        initFloatingIcons(games);
     }
 
     // --- Sound Manager (Web Audio API) ---
@@ -405,5 +408,35 @@ document.addEventListener('DOMContentLoaded', () => {
         `;
 
         return card;
+    }
+
+    function initFloatingIcons(gameList) {
+        const container = document.getElementById('floating-icons-container');
+        if (!container || !gameList || gameList.length === 0) return;
+
+        const iconCount = 20; // Number of floating icons
+
+        for (let i = 0; i < iconCount; i++) {
+            const randomGame = gameList[Math.floor(Math.random() * gameList.length)];
+            const icon = document.createElement('div');
+            icon.classList.add('floating-icon');
+
+            // Set background image
+            icon.style.backgroundImage = `url('${randomGame.image}')`;
+
+            // Random positioning and animation properties
+            const leftPos = Math.random() * 100; // 0% to 100%
+            const duration = 15 + Math.random() * 20; // 15s to 35s
+            const delay = Math.random() * -20; // Start immediately or with negative delay
+            const size = 40 + Math.random() * 60; // 40px to 100px
+
+            icon.style.left = `${leftPos}%`;
+            icon.style.animationDuration = `${duration}s`;
+            icon.style.animationDelay = `${delay}s`;
+            icon.style.width = `${size}px`;
+            icon.style.height = `${size}px`;
+
+            container.appendChild(icon);
+        }
     }
 });

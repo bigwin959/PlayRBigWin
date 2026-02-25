@@ -4,46 +4,39 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Panel - BigWin959</title>
-    <link rel="stylesheet" href="style.css">
+    <title>Admin Panel - ShweLucks</title>
     <style>
-        /* Admin Specific Overrides */
+        :root {
+            --bg-color: #0d1117;
+            --container-bg: #161b22;
+            --text-color: #c9d1d9;
+            --border-color: #30363d;
+            --primary-color: #58a6ff;
+            --success-color: #238636;
+            --danger-color: #da3633;
+        }
+
         body {
-            display: block;
-            /* Override flex center from style.css */
-            padding: 40px;
-            overflow-y: auto;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 20px;
         }
 
-        .admin-container {
-            max-width: 1200px;
+        .container {
+            max-width: 800px;
             margin: 0 auto;
-            background: rgba(13, 13, 30, 0.9);
-            border: 1px solid var(--glass-border);
-            border-radius: 20px;
-            padding: 30px;
-            backdrop-filter: blur(20px);
-        }
-
-        header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 30px;
-            border-bottom: 1px solid var(--glass-border);
-            padding-bottom: 20px;
+            background: var(--container-bg);
+            padding: 20px;
+            border-radius: 6px;
+            border: 1px solid var(--border-color);
         }
 
         h1,
         h2 {
-            color: var(--neon-blue);
-        }
-
-        .section-card {
-            background: rgba(255, 255, 255, 0.03);
-            border-radius: 15px;
-            padding: 20px;
-            margin-bottom: 30px;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 10px;
         }
 
         .form-group {
@@ -53,388 +46,312 @@
         label {
             display: block;
             margin-bottom: 5px;
-            color: #ccc;
+            font-weight: bold;
         }
 
         input[type="text"],
-        input[type="url"],
+        input[type="color"],
+        textarea,
         select {
             width: 100%;
-            padding: 10px;
-            background: rgba(0, 0, 0, 0.3);
-            border: 1px solid #444;
-            border-radius: 8px;
-            color: white;
-            font-family: 'Outfit', sans-serif;
+            padding: 8px;
+            background-color: #0d1117;
+            border: 1px solid #30363d;
+            color: #c9d1d9;
+            border-radius: 4px;
+            box-sizing: border-box;
         }
 
-        .btn-save {
-            background: var(--neon-purple);
-            color: white;
-            border: none;
+        button {
             padding: 10px 20px;
-            border-radius: 8px;
+            border: none;
+            border-radius: 4px;
             cursor: pointer;
             font-weight: bold;
-            transition: all 0.3s ease;
         }
 
-        .btn-save:hover {
-            opacity: 0.9;
-            transform: translateY(-2px);
+        .btn-primary {
+            background-color: var(--primary-color);
+            color: #fff;
         }
 
-        /* Game List Grid */
-        .games-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-            gap: 15px;
-            margin-top: 20px;
+        .btn-success {
+            background-color: var(--success-color);
+            color: #fff;
         }
 
-        .admin-game-card {
-            background: rgba(255, 255, 255, 0.05);
-            border-radius: 10px;
+        .btn-danger {
+            background-color: var(--danger-color);
+            color: #fff;
+        }
+
+        .game-item {
+            border: 1px solid var(--border-color);
             padding: 10px;
-            position: relative;
-            border: 1px solid transparent;
-            transition: all 0.2s;
-        }
-
-        .admin-game-card:hover {
-            border-color: var(--neon-blue);
-        }
-
-        .admin-game-card img {
-            width: 100%;
-            aspect-ratio: 1;
-            object-fit: cover;
-            border-radius: 8px;
             margin-bottom: 10px;
-        }
-
-        .btn-delete {
-            background: #ff4444;
-            color: white;
-            border: none;
-            padding: 5px 10px;
-            border-radius: 5px;
-            cursor: pointer;
-            margin-top: 5px;
-            width: 100%;
-        }
-
-        .btn-add {
-            background: var(--neon-gold);
-            color: black;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 8px;
-            cursor: pointer;
-            font-weight: bold;
-            margin-bottom: 20px;
-        }
-
-        .action-bar {
-            position: sticky;
-            top: 20px;
-            z-index: 100;
+            border-radius: 4px;
             display: flex;
-            justify-content: flex-end;
-            margin-bottom: 20px;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .game-item img {
+            width: 50px;
+            height: 50px;
+            object-fit: cover;
+        }
+
+        .game-details {
+            flex-grow: 1;
         }
 
         .toast {
             position: fixed;
             bottom: 20px;
             right: 20px;
-            background: var(--neon-blue);
-            color: black;
-            padding: 15px 25px;
-            border-radius: 10px;
-            font-weight: bold;
-            transform: translateY(100px);
-            opacity: 0;
-            transition: all 0.3s;
+            padding: 10px 20px;
+            background: #333;
+            color: #fff;
+            border-radius: 4px;
+            display: none;
         }
 
-        .toast.show {
-            transform: translateY(0);
-            opacity: 1;
-        }
-
-        /* Login Modal */
-        .modal-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.9);
-            z-index: 1000;
+        .tabs {
             display: flex;
-            justify-content: center;
-            align-items: center;
+            gap: 10px;
+            margin-bottom: 20px;
         }
 
-        .login-box {
-            background: #1a1a2e;
-            padding: 40px;
-            border-radius: 15px;
-            border: 1px solid var(--neon-blue);
-            text-align: center;
+        .tab-btn {
+            background: transparent;
+            border: 1px solid var(--border-color);
+            color: var(--text-color);
         }
 
-        .hidden {
-            display: none !important;
+        .tab-btn.active {
+            background: var(--primary-color);
+            border-color: var(--primary-color);
+            color: white;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
         }
     </style>
 </head>
 
 <body>
 
-    <!-- Login Modal -->
-    <div class="modal-overlay" id="loginModal">
-        <div class="login-box">
-            <h2 style="margin-bottom:20px;">Admin Login</h2>
-            <input type="password" id="passwordInput" placeholder="Enter Password" style="margin-bottom:20px;">
-            <button class="btn-save" onclick="handleLogin()">Login</button>
-            <p id="loginError" style="color:red; margin-top:10px; display:none;">Invalid Password</p>
-        </div>
-    </div>
+    <div class="container">
+        <h1>Admin Panel</h1>
 
-    <div class="toast" id="toast">Saved Successfully!</div>
-
-    <div class="admin-container">
-        <header>
-            <h1>Admin Dashboard</h1>
-            <a href="index.html" target="_blank" style="color: white; text-decoration: none;">View Site ↗</a>
-        </header>
-
-        <div class="action-bar">
-            <button class="btn-save" id="globalSaveBtn">💾 SAVE ALL CHANGES</button>
+        <div class="tabs">
+            <button class="tab-btn active" onclick="showTab('config')">Site Config</button>
+            <button class="tab-btn" onclick="showTab('games')">Games Manager</button>
         </div>
 
-        <!-- Site Settings -->
-        <section class="section-card">
-            <h2>Site Settings</h2>
+        <!-- Site Configuration -->
+        <div id="config" class="tab-content active">
+            <h2>General Settings</h2>
             <div class="form-group">
                 <label>Page Title</label>
-                <input type="text" id="siteTitle">
+                <input type="text" id="pageTitle">
             </div>
             <div class="form-group">
-                <label>Hero Title (H1)</label>
-                <input type="text" id="heroTitle" placeholder="e.g. Play Random Game">
+                <label>Header Title</label>
+                <input type="text" id="headerTitle">
             </div>
             <div class="form-group">
-                <label>Logo URL</label>
-                <input type="text" id="logoUrl" placeholder="assets/logo.png">
+                <label>Play Button Text</label>
+                <input type="text" id="playButtonText">
             </div>
             <div class="form-group">
-                <label>CTA Button Text</label>
-                <input type="text" id="ctaText">
-            </div>
-            <div class="form-group">
-                <label>Play Link URL</label>
-                <input type="url" id="playUrl">
-            </div>
-        </section>
-
-        <!-- Games Management -->
-        <section class="section-card">
-            <div style="display:flex; justify-content:space-between; align-items:center;">
-                <h2>Games Library</h2>
-                <button class="btn-add" id="addGameBtn">+ Add New Game</button>
+                <label>Call to Action URL</label>
+                <input type="text" id="ctaUrl">
             </div>
 
-            <div class="games-grid" id="gamesList">
-                <!-- Javascript will populate this -->
+            <h2>Colors (Live Preview)</h2>
+            <div class="form-group">
+                <label>Primary Color (Neon Blue)</label>
+                <input type="color" id="primaryColor">
             </div>
-        </section>
+            <div class="form-group">
+                <label>Secondary Color (Purple)</label>
+                <input type="color" id="secondaryColor">
+            </div>
+            <div class="form-group">
+                <label>Accent Color (Gold)</label>
+                <input type="color" id="accentColor">
+            </div>
+        </div>
+
+        <!-- Games Manager -->
+        <div id="games" class="tab-content">
+            <h2>Manage Games</h2>
+            <div class="form-group">
+                <button class="btn-primary" onclick="window.scrollTo(0, document.body.scrollHeight)">+ Add New
+                    Game</button>
+            </div>
+            <div id="gamesList"></div>
+
+            <h3>Add New Game</h3>
+            <div class="game-item">
+                <div class="game-details">
+                    <input type="text" id="newGameName" placeholder="Game Name">
+                    <input type="text" id="newGameImage" placeholder="Image Path (e.g., assets/img.png)">
+                    <select id="newGameProvider">
+                        <option value="JILI">JILI</option>
+                        <option value="PG Soft">PG Soft</option>
+                        <option value="PP Slot">PP Slot</option>
+                    </select>
+                    <input type="text" id="newGameRTP" placeholder="RTP (e.g., 96.5%)">
+                </div>
+                <button class="btn-success" onclick="addNewGame()">Add</button>
+            </div>
+        </div>
+
+        <hr>
+        <button class="btn-success" style="width: 100%; font-size: 1.2em;" onclick="saveChanges()">SAVE CHANGES</button>
     </div>
 
-    <button id="scrollToTop"
-        style="position:fixed; bottom: 20px; left: 20px; padding: 10px; border-radius: 5px; cursor: pointer;">⬆
-        Top</button>
+    <div id="toast" class="toast">Saved Successfully!</div>
 
     <script>
-        let currentData = { games: [], siteSettings: {} };
-        const API_URL = '/api/data'; // Auto-adapts to local or netlify
+        let currentData = {};
 
-        // Elements
-        const siteTitleInput = document.getElementById('siteTitle');
-        const heroTitleInput = document.getElementById('heroTitle');
-        const ctaTextInput = document.getElementById('ctaText');
-        const playUrlInput = document.getElementById('playUrl');
-        const logoUrlInput = document.getElementById('logoUrl');
-        const gamesListContainer = document.getElementById('gamesList');
-        const globalSaveBtn = document.getElementById('globalSaveBtn');
-        const addGameBtn = document.getElementById('addGameBtn');
-        const toast = document.getElementById('toast');
-
-        // PassAuth
-        let adminPassword = sessionStorage.getItem('admin_password');
-
-        function checkAuth() {
-            if (!adminPassword) {
-                document.getElementById('loginModal').classList.remove('hidden');
-            } else {
-                document.getElementById('loginModal').classList.add('hidden');
-                loadData();
+        // 1. Fetch Data on Load
+        async function init() {
+            try {
+                const res = await fetch('data.json');
+                currentData = await res.json();
+                populateForm();
+                renderGames();
+            } catch (e) {
+                console.error(e);
+                alert("Error loading data.json");
             }
         }
 
-        window.handleLogin = () => {
-            const pass = document.getElementById('passwordInput').value;
-            if (pass) {
-                adminPassword = pass;
-                sessionStorage.setItem('admin_password', pass);
-                checkAuth();
-            }
-        };
+        function populateForm() {
+            // Config
+            document.getElementById('pageTitle').value = currentData.siteConfig.pageTitle || '';
+            document.getElementById('headerTitle').value = currentData.siteConfig.headerTitle || '';
+            document.getElementById('playButtonText').value = currentData.siteConfig.playButtonText || '';
+            document.getElementById('ctaUrl').value = currentData.siteConfig.ctaUrl || '';
 
-        window.logout = () => {
-            sessionStorage.removeItem('admin_password');
-            location.reload();
-        }
-
-        function loadData() {
-            fetch(API_URL)
-                .then(res => {
-                    if (res.status === 500) {
-                        throw new Error("Server Error (500). Please Check Netlify Environment Variables (GITHUB_TOKEN, etc).");
-                    }
-                    if (!res.ok) throw new Error(`HTTP Error ${res.status}`);
-                    return res.json();
-                })
-                .then(data => {
-                    // Check for reliable error object from function
-                    if (data.error) throw new Error(data.error);
-
-                    currentData = data;
-                    renderSettings();
-                    renderGames();
-                })
-                .catch(err => {
-                    console.error(err);
-                    alert('Failed to load data:\n' + err.message);
-                });
-        }
-
-        function renderSettings() {
-            if (currentData.siteSettings) {
-                siteTitleInput.value = currentData.siteSettings.title || '';
-                heroTitleInput.value = currentData.siteSettings.heroTitle || '';
-                ctaTextInput.value = currentData.siteSettings.ctaButtonText || '';
-                playUrlInput.value = currentData.siteSettings.playUrl || '';
-                logoUrlInput.value = currentData.siteSettings.logoUrl || '';
-            }
+            // Colors
+            document.getElementById('primaryColor').value = currentData.siteConfig.colors?.primary || '#00f3ff';
+            document.getElementById('secondaryColor').value = currentData.siteConfig.colors?.secondary || '#bc13fe';
+            document.getElementById('accentColor').value = currentData.siteConfig.colors?.accent || '#ffd700';
         }
 
         function renderGames() {
-            gamesListContainer.innerHTML = '';
+            const list = document.getElementById('gamesList');
+            list.innerHTML = '';
             currentData.games.forEach((game, index) => {
-                const card = document.createElement('div');
-                card.className = 'admin-game-card';
-                card.innerHTML = `
-                    <img src="${game.image}" alt="Game Image">
-                    
-                    <div class="form-group">
-                        <label>Name</label>
-                        <input type="text" value="${game.name}" onchange="updateGame(${index}, 'name', this.value)">
-                    </div>
-                    
-                    <div class="form-group">
-                        <label>Provider</label>
-                        <select onchange="updateGame(${index}, 'provider', this.value)">
-                            <option value="JILI" ${game.provider === 'JILI' ? 'selected' : ''}>JILI</option>
-                            <option value="PG Soft" ${game.provider === 'PG Soft' ? 'selected' : ''}>PG Soft</option>
-                            <option value="PP Slot" ${game.provider === 'PP Slot' ? 'selected' : ''}>PP Slot</option>
-                        </select>
-                    </div>
-
-                    <div class="form-group">
-                        <label>Image Path</label>
-                        <input type="text" value="${game.image}" onchange="updateGame(${index}, 'image', this.value)">
-                    </div>
-
-                    <div class="form-group">
-                        <label>RTP (Optional)</label>
-                        <input type="text" value="${game.rtp || ''}" placeholder="e.g. 96.5%" onchange="updateGame(${index}, 'rtp', this.value)">
-                    </div>
-
-                    <button class="btn-delete" onclick="deleteGame(${index})">DELETE</button>
-                `;
-                gamesListContainer.appendChild(card);
+                const div = document.createElement('div');
+                div.className = 'game-item';
+                div.innerHTML = `
+                <img src="${game.image}" alt="img">
+                <div class="game-details">
+                    <strong>${game.name}</strong><br>
+                    <small>${game.provider} | RTP: ${game.rtp || 'Auto'}</small>
+                </div>
+                <button class="btn-danger" onclick="removeGame(${index})">Remove</button>
+            `;
+                list.appendChild(div);
             });
         }
 
-        window.updateGame = (index, field, value) => {
-            currentData.games[index][field] = value;
-        };
+        function addNewGame() {
+            const name = document.getElementById('newGameName').value;
+            const image = document.getElementById('newGameImage').value;
+            const provider = document.getElementById('newGameProvider').value;
+            const rtp = document.getElementById('newGameRTP').value;
 
-        window.deleteGame = (index) => {
-            if (confirm('Are you sure you want to delete this game?')) {
+            if (!name || !image) return alert("Name and Image are required");
+
+            const newGame = { name, image, provider };
+            if (rtp) newGame.rtp = rtp;
+
+            currentData.games.push(newGame);
+            renderGames();
+
+            // Clear inputs
+            document.getElementById('newGameName').value = '';
+            document.getElementById('newGameImage').value = '';
+            document.getElementById('newGameRTP').value = '';
+        }
+
+        function removeGame(index) {
+            if (confirm('Delete this game?')) {
                 currentData.games.splice(index, 1);
                 renderGames();
             }
-        };
-
-        addGameBtn.addEventListener('click', () => {
-            currentData.games.unshift({
-                name: "New Game",
-                image: "assets/logo.png",
-                provider: "JILI",
-                rtp: ""
-            });
-            renderGames();
-        });
-
-        globalSaveBtn.addEventListener('click', () => {
-            // Update Settings Object
-            currentData.siteSettings = {
-                title: siteTitleInput.value,
-                heroTitle: heroTitleInput.value,
-                ctaButtonText: ctaTextInput.value,
-                playUrl: playUrlInput.value,
-                logoUrl: logoUrlInput.value
-            };
-
-            // Post Data WITH PASSWORD HEADER
-            fetch(API_URL, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'x-admin-password': adminPassword
-                },
-                body: JSON.stringify(currentData)
-            })
-                .then(async res => {
-                    if (res.status === 401) {
-                        alert("Unauthorized: Incorrect Password");
-                        logout();
-                        return;
-                    }
-                    if (!res.ok) throw new Error("Save failed");
-                    return res.json();
-                })
-                .then(data => {
-                    if (data) showToast();
-                })
-                .catch(err => alert('Failed to save: ' + err));
-        });
-
-        // Init
-        checkAuth(); // Call checkAuth instead of fetching immediately
-
-        function showToast() {
-            toast.classList.add('show');
-            setTimeout(() => toast.classList.remove('show'), 3000);
         }
 
-        document.getElementById('scrollToTop').onclick = () => window.scrollTo(0, 0);
+        function showTab(tabId) {
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+            document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
+            document.getElementById(tabId).classList.add('active');
+            event.target.classList.add('active');
+        }
 
+        // 2. Save Data
+        async function saveChanges() {
+            const btn = document.querySelector('button[onclick="saveChanges()"]');
+            const oldText = btn.innerText;
+            btn.innerText = "Saving...";
+            btn.disabled = true;
+
+            // Collect Config Data
+            currentData.siteConfig.pageTitle = document.getElementById('pageTitle').value;
+            currentData.siteConfig.headerTitle = document.getElementById('headerTitle').value;
+            currentData.siteConfig.playButtonText = document.getElementById('playButtonText').value;
+            currentData.siteConfig.ctaUrl = document.getElementById('ctaUrl').value;
+
+            currentData.siteConfig.colors = {
+                primary: document.getElementById('primaryColor').value,
+                secondary: document.getElementById('secondaryColor').value,
+                accent: document.getElementById('accentColor').value,
+                background: "#050505" // Keep constant for now
+            };
+
+            try {
+                const res = await fetch('/.netlify/functions/save-data', {
+                    method: 'POST',
+                    body: JSON.stringify({ payload: currentData })
+                });
+
+                const result = await res.json();
+                if (res.ok) {
+                    showToast("Saved Successfully! Changes will appear after build (approx 1 min).");
+                } else {
+                    alert("Error saving: " + (result.error || result.message));
+                }
+            } catch (e) {
+                console.error(e);
+                alert("Network Error");
+            }
+
+            btn.innerText = oldText;
+            btn.disabled = false;
+        }
+
+        function showToast(msg) {
+            const t = document.getElementById('toast');
+            t.innerText = msg;
+            t.style.display = 'block';
+            setTimeout(() => t.style.display = 'none', 3000);
+        }
+
+        init();
     </script>
+
 </body>
 
 </html>

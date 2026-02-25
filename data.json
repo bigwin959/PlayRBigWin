@@ -1,10 +1,18 @@
 {
-  "siteSettings": {
-    "title": "Random Game Picker BigWin959",
-    "heroTitle": "Play Random Game",
-    "ctaButtonText": "Play Highest RTP Games for Today!",
-    "playUrl": "https://www.bigwin959.com",
-    "logoUrl": "assets/logo.png"
+  "siteConfig": {
+    "pageTitle": "Random Game Picker BigWin959",
+    "headerTitle": "Play Random Game",
+    "playButtonText": "ဂိမ်းရွေးရန်",
+    "ctaUrl": "https://www.bigwin959.com",
+    "ctaText": "ကစားမယ်",
+    "lockTextOpen": "Unlock",
+    "lockTextClosed": "LOCKED",
+    "colors": {
+      "primary": "#00f3ff",
+      "secondary": "#bc13fe",
+      "accent": "#ffd700",
+      "background": "#050510"
+    }
   },
   "games": [
     {

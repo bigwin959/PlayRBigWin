@@ -28,11 +28,13 @@ document.addEventListener("DOMContentLoaded", () => {
 
       if (btn) btn.textContent = config.playButtonText;
 
+      // Store CTA URL globally for card links
+      window.siteCtaUrl = config.ctaUrl;
+
       // Update CTA Links
       const ctaLinks = document.querySelectorAll(".play-btn");
       ctaLinks.forEach((link) => {
         link.href = config.ctaUrl;
-        window.siteCtaUrl = config.ctaUrl; // Store globally for card links
         // Preserve the icon
         const icon = link.querySelector(".play-icon");
         link.innerHTML = "";

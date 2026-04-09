@@ -1,8 +1,8 @@
 {
   "siteConfig": {
-    "pageTitle": "Random Game Picker BigWin959",
-    "headerTitle": "Play Random Game",
-    "playButtonText": "ဂိမ်းရွေးရန်",
+    "pageTitle": "গণপ্রজাতন্ত্রী বাংলাদেশ ",
+    "headerTitle": "গণপ্রজাতন্ত্রী বাংলাদেশ ",
+    "playButtonText": "গণপ্রজাতন্ত্রী বাংলাদেশ ",
     "ctaUrl": "https://www.bigwin959.com",
     "ctaText": "ကစားမယ်",
     "lockTextOpen": "Unlock",
@@ -11,7 +11,7 @@
       "primary": "#00f3ff",
       "secondary": "#bc13fe",
       "accent": "#ffd700",
-      "background": "#050510"
+      "background": "#050505"
     }
   },
   "games": [

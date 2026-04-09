@@ -303,6 +303,9 @@
 
         // 2. Save Data
         async function saveChanges() {
+            const password = prompt("Enter Admin Password:");
+            if (password === null) return; // Cancelled
+
             const btn = document.querySelector('button[onclick="saveChanges()"]');
             const oldText = btn.innerText;
             btn.innerText = "Saving...";
@@ -326,7 +329,7 @@
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
-                        'x-admin-password': 'admin'
+                        'x-admin-password': password
                     },
                     body: JSON.stringify(currentData)
                 });
